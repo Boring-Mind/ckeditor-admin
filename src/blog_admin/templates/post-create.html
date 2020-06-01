@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/tagify.css' %}">
+{% endblock extracss %}
+
+{% block extrajs %}
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script defer src="{% static 'js/tagify.js' %}"></script>
+    <script defer src="{% static 'js/tagify_hashtags_field.js' %}"></script>
+{% endblock extrajs %}
+
+{% block content %}
+    <div class="container my-5">
+        {% crispy form %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,12 @@
+[run]
+branch = True
+source = .
+omit =
+    manage.py
+    src/asgi.py
+    src/wsgi.py
+    src/blog_admin/apps.py
+
+[report]
+skip_covered = True
+skip_empty = True
