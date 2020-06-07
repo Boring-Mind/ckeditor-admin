@@ -37,7 +37,8 @@ class PostFormView(LoginRequiredMixin, FormView):
 
     @classmethod
     def retrieve_all_hashtags(cls):
-        return Hashtags.objects.all().values()
+        tags = Hashtags.objects.all().values()
+        return [tag['text'] for tag in tags]
 
     def post(self, request, *args, **kwars):
         """Process POST request to the view and get back a response."""
@@ -49,14 +50,16 @@ class PostFormView(LoginRequiredMixin, FormView):
             hashtags = PostFormView.parse_hashtags(
                 form.cleaned_data['hashtags']
             )
-            stored_tags = PostFormView.retrieve_all_hashtags()
+            stored_tag_values = PostFormView.retrieve_all_hashtags()
 
             # Filter tags, that aren't in the db and save them to db
             new_hashtags = [
-                Hashtags(text=tag).save()
+                Hashtags(text=tag)
                 for tag in hashtags
-                if tag not in stored_tags
+                if tag not in stored_tag_values
             ]
+            for tag in new_hashtags:
+                tag.save()
 
             # Alternative for single-object save
             # Don't work in sqlite, but works for postgresql
@@ -71,7 +74,7 @@ class PostFormView(LoginRequiredMixin, FormView):
             # Select all tags, that are linked with current post
             post_tags = [
                 Hashtags(text=tag) for tag in hashtags
-                if tag in stored_tags
+                if tag in stored_tag_values
             ]
             post_tags.extend(new_hashtags)
 
@@ -81,6 +84,7 @@ class PostFormView(LoginRequiredMixin, FormView):
 
             # Return successful HttpResponse
             return super().form_valid(form)
+        return super().form_invalid(form)
 
 
 class RegisterView(FormView):

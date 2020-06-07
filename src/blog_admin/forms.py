@@ -78,6 +78,7 @@ class PostForm(forms.ModelForm):
             'max_length': settings.MAX_POST_LENGTH
         })
     )
+    preview_img_url = forms.URLField(max_length=300)
 
     class Meta:
         model = Post

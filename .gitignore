@@ -139,3 +139,7 @@ cython_debug/
 
 # Deployed static files dir
 staticfiles/
+
+# Some logs
+archived_logs/
+latest_logs/
