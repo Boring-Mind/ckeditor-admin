@@ -4,15 +4,6 @@ from django.utils.text import slugify
 from faker import Faker
 
 
-@pytest.fixture
-def user():
-    """Fake user data fixture.
-    
-    Generate user data.
-    """
-    yield FakeUser()
-
-
 class FakeUser:
     """Fake user data factory. Generates random user profile."""
 
@@ -23,3 +14,12 @@ class FakeUser:
         self.password = kwargs.get(
             'password', fake.password(length=settings.MIN_PASSWORD_LENGTH)
         )
+
+
+@pytest.fixture
+def user():
+    """Fake user data fixture.
+    
+    Generate user data.
+    """
+    yield FakeUser()
