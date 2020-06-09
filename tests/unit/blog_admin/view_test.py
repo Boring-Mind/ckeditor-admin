@@ -48,6 +48,26 @@ def test_register_view_returns_redirect(rf, user, django_user_model):
 # PostForm view
 ##############################################
 
+
+def test_post_form_view_form_invalid(rf):
+    # Making an empty response with correct url
+    request = rf.post(reverse('create_post'), {})
+    # Setup PostFormView instance
+    view = PostFormView()
+    view.setup(request)
+    
+    # Sending to the correct url address an empty response.
+    # Empty response means empty form.
+    # And it means that view cannot mark the form as valid,
+    # because there are required fields in it
+    response = view.post(request)
+
+    assert response.status_code == 200
+    assert response.template_name[0] == 'post-create.html', \
+        'View returns not a corresponding page.'
+    assert len(response.context_data['form'].errors) > 0, \
+        'There must be form errors.'
+
 # Unfinished test
 # @pytest.mark.django_db
 # def test_post_create_view_form_valid(rf, client, django_user_model):
