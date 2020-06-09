@@ -66,4 +66,6 @@ class Post(models.Model):
         ordering = ['post_date']
 
     def __str__(self):
-        return f'{self.post_date}: \"{self.title}\"'
+        return (
+            f'{self.post_date.strftime("%d.%m.%Y %H:%M")} - \"{self.title}\"'
+        )
