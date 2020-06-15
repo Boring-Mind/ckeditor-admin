@@ -40,51 +40,48 @@ class PostFormView(LoginRequiredMixin, FormView):
         tags = Hashtags.objects.all().values()
         return [tag['text'] for tag in tags]
 
-    def post(self, request, *args, **kwars):
-        """Process POST request to the view and get back a response."""
+    def form_valid(self, form):
+        """Process and save form data and return back an RedirectResponse."""
         # ToDo: Add tests for the function
         # ToDo: Refactor (extract method)
-        form = self.get_form()
-        if form.is_valid():
-            # Convert received hashtags from json format to the list[str]
-            hashtags = PostFormView.parse_hashtags(
-                form.cleaned_data['hashtags']
-            )
-            stored_tag_values = PostFormView.retrieve_all_hashtags()
+        # Convert received hashtags from json format to the list[str]
+        hashtags = PostFormView.parse_hashtags(
+            form.cleaned_data['hashtags']
+        )
+        stored_tag_values = PostFormView.retrieve_all_hashtags()
 
-            # Filter tags, that aren't in the db and save them to db
-            new_hashtags = [
-                Hashtags(text=tag)
-                for tag in hashtags
-                if tag not in stored_tag_values
-            ]
-            for tag in new_hashtags:
-                tag.save()
+        # Filter tags, that aren't in the db and save them to db
+        new_hashtags = [
+            Hashtags(text=tag)
+            for tag in hashtags
+            if tag not in stored_tag_values
+        ]
+        for tag in new_hashtags:
+            tag.save()
 
-            # Alternative for single-object save
-            # Don't work in sqlite, but works for postgresql
-            # new_hashtags = Hashtags.objects.bulk_create(new_hashtags)
+        # Alternative for single-object save
+        # Don't work in sqlite, but works for postgresql
+        # new_hashtags = Hashtags.objects.bulk_create(new_hashtags)
 
-            # Save post and add author to it.
-            # Posts needs to be saved before linking hashtags objects in the db
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
+        # Save post and add author to it.
+        # Posts needs to be saved before linking hashtags objects in the db
+        post = form.save(commit=False)
+        post.author = self.request.user
+        post.save()
 
-            # Select all tags, that are linked with current post
-            post_tags = [
-                Hashtags(text=tag) for tag in hashtags
-                if tag in stored_tag_values
-            ]
-            post_tags.extend(new_hashtags)
+        # Select all tags, that are linked with current post
+        post_tags = [
+            Hashtags(text=tag) for tag in hashtags
+            if tag in stored_tag_values
+        ]
+        post_tags.extend(new_hashtags)
 
-            # Link created hashtags with the post object in the db
-            for tag in post_tags:
-                post.hashtags.add(tag)
+        # Link created hashtags with the post object in the db
+        for tag in post_tags:
+            post.hashtags.add(tag)
 
-            # Return successful HttpResponse
-            return super().form_valid(form)
-        return super().form_invalid(form)
+        # Return successful HttpResponse
+        return super().form_valid(form)
 
 
 class RegisterView(FormView):

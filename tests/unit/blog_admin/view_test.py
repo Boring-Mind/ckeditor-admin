@@ -65,6 +65,8 @@ def test_post_form_view_form_invalid(rf):
     assert response.status_code == 200
     assert response.template_name[0] == 'post-create.html', \
         'View returns not a corresponding page.'
+    assert response.context_data['form'].is_valid() is False, \
+        'Form must be invalid.'
     assert len(response.context_data['form'].errors) > 0, \
         'There must be form errors.'
 
