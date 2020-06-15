@@ -4,8 +4,10 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.urls import reverse
+from django.core.validators import RegexValidator
+import re
 
-from .models import Post
+from .models import Post, Hashtags
 
 
 class LoginForm(AuthenticationForm):
@@ -68,8 +70,9 @@ class PostForm(forms.ModelForm):
         widget=forms.Textarea()
     )
     hashtags = forms.CharField(
-        label='Tags',
-        max_length=300,
+        label='Add tags to your post',
+        max_length=200,
+        help_text='Maximum 5 tags up to 30 characters long',
         widget=forms.TextInput(attrs={'id': 'hashtags_input'})
     )
     content = forms.CharField(
@@ -107,3 +110,18 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.crispy_init()
+
+
+class TagForm(forms.ModelForm):
+    text = forms.CharField(
+        max_length=30,
+        validators=[
+            RegexValidator(
+                regex=re.compile(r'^[a-zA-Z0-9 \/-]+$'),
+                message='Hashtag doesn\'t comply'
+            )
+        ])
+
+    class Meta:
+        model = Hashtags
+        fields = '__all__'
