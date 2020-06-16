@@ -57,7 +57,7 @@ def test_post_form_view_form_valid(client, django_user_model):
     )
 
     # Testing length of a posts array
-    assert len(post) == 1
+    assert len(post) == 1, "There must be one post object."
 
     # Testing content of saved post model
     assert post[0].title == 'Title'
@@ -66,15 +66,15 @@ def test_post_form_view_form_valid(client, django_user_model):
     assert post[0].preview_img_url == 'https://example.com/apparatus/image.png'
     assert post[0].post_status == 'DR'
 
+    # Shortcut for the statements below
+    hashtags = post[0].hashtags.values()
+
     # Testing content of saved hashtags models
-    assert len(post[0].hashtags.values()) == 4
-    assert post[0].hashtags.values()[0].get('id') is not None
-    assert post[0].hashtags.values()[1].get('id') is not None
-    assert post[0].hashtags.values()[2].get('id') is not None
-    assert post[0].hashtags.values()[3].get('id') is not None
+    assert len(hashtags) == 4, \
+        "There must be four hashtags linked with post"
 
     # Getting hashtags' text values
-    hashtags_values = [tag['text'] for tag in post[0].hashtags.values()]
+    hashtags_values = [tag['text'] for tag in hashtags]
 
     # Testing saved hashtags' texts
     assert 'Muhammad' in hashtags_values
