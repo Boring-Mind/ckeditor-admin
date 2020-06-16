@@ -123,8 +123,19 @@ class PostForm(forms.ModelForm):
                 'hashtags',
                 'preview_img_url',
                 'post_status',
-                layout.ButtonHolder(
-                    layout.Submit('submit', 'Create post')
+                layout.Row(
+                    layout.Div(
+                        layout.Button(
+                            'back',
+                            'Previous page',
+                            css_class='btn-outline-dark'
+                        ),
+                        css_class='col-md-6'
+                    ),
+                    layout.Div(
+                        layout.Submit('submit', 'Create post'),
+                        css_class='col-md-6'
+                    )
                 ),
                 css_class='py-3 d-none',
                 css_id='form2'
