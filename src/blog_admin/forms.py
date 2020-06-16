@@ -95,16 +95,40 @@ class PostForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.form_action = reverse('create_post')
 
+        # self.helper.layout = layout.Layout(
+        #     layout.Field('title'),
+        #     layout.Field('description'),
+        #     layout.Field('hashtags'),
+        #     layout.Field('content'),
+        #     layout.Field('preview_img_url'),
+        #     layout.Field('post_status'),
+        #     layout.ButtonHolder(
+        #         layout.Submit('submit', 'Create post')
+        #     )
+        # )
         self.helper.layout = layout.Layout(
-            layout.Field('title'),
-            layout.Field('description'),
-            layout.Field('hashtags'),
-            layout.Field('content'),
-            layout.Field('preview_img_url'),
-            layout.Field('post_status'),
-            layout.ButtonHolder(
-                layout.Submit('submit', 'Create post')
-            )
+            layout.Div(
+                'title',
+                'content',
+                layout.ButtonHolder(
+                    layout.Button(
+                        'next', 'Next page', css_class='btn-outline-dark'
+                    )
+                ),
+                css_class='py-3',
+                css_id='form1'
+            ),
+            layout.Div(
+                'description',
+                'hashtags',
+                'preview_img_url',
+                'post_status',
+                layout.ButtonHolder(
+                    layout.Submit('submit', 'Create post')
+                ),
+                css_class='py-3 d-none',
+                css_id='form2'
+            ),
         )
     
     def __init__(self, *args, **kwargs):
