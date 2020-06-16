@@ -3,9 +3,10 @@ from typing import List
 
 from django.contrib.auth import views as auth_views, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
 from django.forms import Form
+from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
 
@@ -25,6 +26,14 @@ class LoginView(auth_views.LoginView):
 class LogoutView(LoginRequiredMixin, auth_views.LogoutView):
     """We don't need any additional functionality in it."""
     pass
+
+
+class TagsRetrieveView(LoginRequiredMixin, View):
+    def get(self, request: dict, *args, **kwargs) -> JsonResponse:
+        """Retrieve all tags from the db and put them in JsonResponse."""
+        values = Hashtags.objects.all().values()
+        values = {'values': [tag['text'] for tag in values]}
+        return JsonResponse(values)
 
 
 class PostFormView(LoginRequiredMixin, FormView):

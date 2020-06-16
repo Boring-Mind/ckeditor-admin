@@ -14,4 +14,5 @@ urlpatterns = [
     path('secret/', views.SecretView.as_view(), name='secret'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('posts/create/', views.PostFormView.as_view(), name='create_post'),
+    path('tags/get/', views.TagsRetrieveView.as_view(), name='get_tags'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
