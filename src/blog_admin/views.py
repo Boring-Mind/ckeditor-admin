@@ -140,7 +140,3 @@ class RegisterView(FormView):
 
 class SecretView(LoginRequiredMixin, TemplateView):
     template_name = 'secret-page.html'
-
-
-# class PostAdminView(FormView):
-#     template_name = 'post-form.html'
