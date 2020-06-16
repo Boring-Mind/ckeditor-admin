@@ -16,7 +16,7 @@ async function getTags() {
     return await response.json();
 }
 
-window.addEventListener("load", function() {
+document.addEventListener("DOMContentLoaded", function() {
     getTags()
     .then(whitelist => {
         tagify.settings.whitelist = whitelist['values'];
